@@ -25,11 +25,13 @@ jobs:
       - uses: actions/checkout@v4
 
       - id: Authenticate
+        name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
       - id: Deploy
+        name: Deploy Cloud Function
         uses: google-github-actions/deploy-cloud-functions@v2
         with:
           name: ${{ env.FUNCTION_NAME }}
@@ -47,6 +49,7 @@ jobs:
           ingress_settings: 'ALLOW_ALL'
           
       - id: Test
+        name: Test function
         run: |
           curl -X POST "${{ steps.deploy.outputs.url }}" \
             -H "Content-Type: application/json" \
