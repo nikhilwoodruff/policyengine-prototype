@@ -1,2 +1,3 @@
 policyengine
 functions-framework==3.*
+supabase
