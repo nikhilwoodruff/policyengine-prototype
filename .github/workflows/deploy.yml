@@ -1,0 +1,55 @@
+name: Deploy to Google Cloud Functions
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'function/**'
+      - '.github/workflows/deploy.yml'
+
+env:
+  FUNCTION_NAME: run_simulation
+  REGION: us-central1
+  RUNTIME: python310
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SA_EMAIL }}
+
+      - id: deploy
+        uses: google-github-actions/deploy-cloud-functions@v2
+        with:
+          name: ${{ env.FUNCTION_NAME }}
+          runtime: ${{ env.RUNTIME }}
+          region: ${{ env.REGION }}
+          source_dir: ./function
+          entry_point: run_simulation
+          env_vars: |
+            SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+            SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}
+          memory_mb: 512
+          timeout: 300
+          min_instances: 0
+          max_instances: 10
+          ingress_settings: 'ALLOW_ALL'
+          
+      - id: test
+        run: |
+          curl -X POST "${{ steps.deploy.outputs.url }}" \
+            -H "Content-Type: application/json" \
+            -d '{"reform": 34}' \
+            --fail
