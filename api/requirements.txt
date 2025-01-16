@@ -1,0 +1,5 @@
+fastapi
+requests
+pydantic
+supabase
+gunicorn
