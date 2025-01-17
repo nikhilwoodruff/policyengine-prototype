@@ -6,9 +6,22 @@ import json
 import os
 from datetime import datetime
 from typing import Optional, Dict
+from fastapi.middleware.cors import CORSMiddleware
 
 # Initialize FastAPI app
 app = FastAPI()
+
+origins = [
+    "http://localhost:8000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Initialize Supabase client
 supabase_url = os.getenv("SUPABASE_URL")
@@ -31,8 +44,13 @@ class Job(BaseModel):
     options: Dict
     started_at: Optional[datetime] = None
 
-@app.post("/jobs/", response_model=Job)
+@app.get("/")
+async def main():
+    return {"message": "Hello World"}
+
+@app.post("/job", response_model=Job)
 async def create_job(job: JobCreate):
+    print(job)
     try:
         # Insert job into Supabase
         new_job = supabase.table("job").insert({
@@ -52,12 +70,10 @@ async def create_job(job: JobCreate):
             response = requests.post(
                 cloud_function_url,
                 json={
-                    "job_id": created_job["id"],
-                    "options": created_job["options"]
+                    "job_id": created_job["id"]
                 },
-                timeout=10  # 10 second timeout
+                timeout=0.1  # 1 second timeout
             )
-            response.raise_for_status()
         except requests.exceptions.RequestException as e:
             # Log the error but don't fail the job creation
             print(f"Failed to trigger cloud function: {str(e)}")
@@ -71,7 +87,7 @@ async def create_job(job: JobCreate):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/jobs/{job_id}", response_model=Job)
+@app.get("/job/{job_id}", response_model=Job)
 async def get_job(job_id: int):
     try:
         job = supabase.table("job").select("*").eq("id", job_id).execute()
