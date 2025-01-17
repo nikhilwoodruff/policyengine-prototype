@@ -57,8 +57,7 @@ export default function Home() {
       <Card className="h-3/4 w-3/4 p-4 m-4">
         <h1 className="text-2xl font-bold">Job results</h1>
         <p className="text-gray-600">Results will appear here.</p>
-        <p>{jobId}</p>
-        <p>{JSON.stringify(jobData)}</p>
+        <p>{jobData?.new?.result ? JSON.stringify(jobData.new.result) : ""}</p>
       </Card>
     </div>
   );
