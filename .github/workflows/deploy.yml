@@ -37,7 +37,7 @@ jobs:
           name: ${{ env.FUNCTION_NAME }}
           runtime: ${{ env.RUNTIME }}
           region: ${{ env.REGION }}
-          source_dir: ./tasks/simulate
+          source_dir: ./api/tasks/simulate
           entry_point: main
           env_vars: |
             SUPABASE_URL=${{ secrets.SUPABASE_URL }}
