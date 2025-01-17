@@ -8,3 +8,11 @@ create table
     started_at timestamp with time zone null,
     constraint job_pkey primary key (id)
   ) tablespace pg_default;
+
+alter table public.job enable row level security;
+
+create policy "Allow anyone to select from job" on public.job for select using (true);
+create policy "Allow anyone to insert into job" on public.job for insert with check (true);
+create policy "Allow anyone to update job" on public.job for update using (true) with check (true);
+
+alter publication supabase_realtime add table public.job;

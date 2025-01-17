@@ -7,7 +7,7 @@ from supabase import create_client, Client
 import datetime
 import traceback
 import plotly.graph_objects as go
-from run_compute import safe_json_decode
+from run_compute import run_compute
 
 # Initialize Supabase client
 
