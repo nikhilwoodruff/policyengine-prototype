@@ -66,6 +66,7 @@ async def create_job(job: JobCreate):
     print(job)
     try:
         # Insert job into Supabase
+        print("Inserting new job into table")
         new_job = (
             supabase.table("job")
             .insert(
