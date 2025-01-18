@@ -55,12 +55,12 @@ class Job(BaseModel):
     started_at: Optional[datetime] = None
 
 
-@app.get("/")
+@app.get("/api")
 async def main():
     return {"message": "Hello World"}
 
 
-@app.post("/job", response_model=Job)
+@app.post("/api/job", response_model=Job)
 async def create_job(job: JobCreate):
     print(job)
     try:
@@ -114,7 +114,7 @@ async def create_job(job: JobCreate):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/job/{job_id}", response_model=Job)
+@app.get("/api/job/{job_id}", response_model=Job)
 async def get_job(job_id: int):
     try:
         job = supabase.table("job").select("*").eq("id", job_id).execute()
