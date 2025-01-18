@@ -43,10 +43,10 @@ jobs:
           env_vars: |
             SUPABASE_URL=${{ secrets.SUPABASE_URL }}
             SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}
-          memory_gb: 4
+          memory_mb: 4096
           timeout: 300
           min_instances: 0
-          max_instances: 10
+          max_instances: 2
           ingress_settings: 'ALLOW_ALL'
           
       - id: Test
