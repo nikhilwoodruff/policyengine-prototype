@@ -16,6 +16,7 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    name: Deploy
 
     permissions:
       contents: 'read'
@@ -42,7 +43,7 @@ jobs:
           env_vars: |
             SUPABASE_URL=${{ secrets.SUPABASE_URL }}
             SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}
-          memory_mb: 512
+          memory_gb: 4
           timeout: 300
           min_instances: 0
           max_instances: 10
