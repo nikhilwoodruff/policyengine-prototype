@@ -8,14 +8,14 @@ const nextConfig: NextConfig = {
   env: {
     LOCAL: process.env.LOCAL,
     SUPABASE_URL: process.env.LOCAL ?
-      process.env.SUPABASE_URL :
-      process.env.SUPABASE_LOCAL_URL,
+      process.env.SUPABASE_LOCAL_URL :
+      process.env.SUPABASE_URL,
     SUPABASE_KEY: process.env.LOCAL ?
-      process.env.SUPABASE_KEY :
-      process.env.SUPABASE_LOCAL_KEY,
+      process.env.SUPABASE_LOCAL_KEY :
+      process.env.SUPABASE_KEY,
     API_URL: process.env.LOCAL ?
-      process.env.API_URL :
-      process.env.API_LOCAL_URL,
+      process.env.API_LOCAL_URL :
+      process.env.API_URL,
   },
   rewrites: async () => {
     return [
