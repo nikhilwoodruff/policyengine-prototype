@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
     SUPABASE_KEY: process.env.LOCAL ?
       process.env.SUPABASE_KEY :
       process.env.SUPABASE_LOCAL_KEY,
+    API_URL: process.env.LOCAL ?
+      process.env.API_URL :
+      process.env.API_LOCAL_URL,
   },
   rewrites: async () => {
     return [
