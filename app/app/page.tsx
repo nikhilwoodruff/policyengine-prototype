@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(process.env.SUPABASE_URL || '', process.env.SUPABASE_KEY || '');
 const apiUrl = process.env.API_URL || '';
@@ -27,6 +27,12 @@ async function submitJob(jobDetails: string) {
   )
 }
 
+async function getJobResult(jobId: string) {
+  return supabase.from("job").select("result").eq("id", jobId).then(
+    data => data.data
+  );
+}
+
 export default function Home() {
   const [jobDetails, setJobDetails] = useState<string>(`{"scope": "household", "country": "uk", "data": {"employment_income": 30000}, "path": "/", "time_period": 2025}`);
   const [jobId, setJobId] = useState<string>("");
@@ -40,13 +46,11 @@ export default function Home() {
         <Textarea className="w-full h-1/2" placeholder="Enter job details here" value={jobDetails} onChange={(e) => setJobDetails(e.target.value)} />
         <Button className="w-full" onClick={() => submitJob(jobDetails).then(value => {
             setJobId(value);
+            getJobResult(value).then(setJobData);
             supabase.channel(`job_${value}`).on(
               "postgres_changes", 
               { schema: "public", table: "job", event: "*", filter: "id=eq." + value },
-              (payload) => {
-                console.log("Change received!", payload);
-                setJobData(payload);
-              }
+              () => {getJobResult(value).then(setJobData)}
             ).subscribe();
 
           })}>Start job</Button>
@@ -55,7 +59,7 @@ export default function Home() {
         <h1 className="text-2xl font-bold">Job results</h1>
         <p className="text-gray-600">Results will appear here.</p>
         <h4>Job {jobId}</h4>
-        <p>{jobData?.new?.result ? JSON.stringify(jobData.new.result) : ""}</p>
+        <p>{JSON.stringify(jobData)}</p>
       </Card>
     </div>
   );
