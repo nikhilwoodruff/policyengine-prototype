@@ -28,7 +28,7 @@ async function submitJob(jobDetails: string) {
 }
 
 export default function Home() {
-  const [jobDetails, setJobDetails] = useState<string>("");
+  const [jobDetails, setJobDetails] = useState<string>(`{"scope": "household", "country": "uk", "data": {"employment_income": 30000}, "path": "/", "time_period": 2025}`);
   const [jobId, setJobId] = useState<string>("");
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const [jobData, setJobData] = useState<any>(null);
