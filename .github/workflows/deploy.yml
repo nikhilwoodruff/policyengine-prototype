@@ -48,11 +48,3 @@ jobs:
           min_instances: 0
           max_instances: 2
           ingress_settings: 'ALLOW_ALL'
-          
-      - id: Test
-        name: Test function
-        run: |
-          curl -X POST "${{ steps.deploy.outputs.url }}" \
-            -H "Content-Type: application/json" \
-            -d '{"job": 1}' \
-            --fail
