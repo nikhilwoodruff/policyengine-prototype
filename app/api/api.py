@@ -8,6 +8,7 @@ from datetime import datetime
 from typing import Optional, Dict
 from fastapi.middleware.cors import CORSMiddleware
 import sqlite3
+import traceback
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -110,7 +111,7 @@ async def create_job(job: JobCreate):
         return Job(**created_job)
 
     except Exception as e:
-        print(e)
+        print(traceback.format_exc())
         raise HTTPException(status_code=500, detail=str(e))
 
 
