@@ -16,7 +16,7 @@ async function submitJob(jobDetails: string) {
     "options": JSON.parse(jobDetails),
   };
   // Send job to server
-  return fetch(apiUrl, {
+  return fetch(apiUrl + "/job", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
