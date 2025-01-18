@@ -56,16 +56,14 @@ class Job(BaseModel):
     started_at: Optional[datetime] = None
 
 
-@app.get("/api")
+@app.get("/api/hello")
 async def main():
     return {"message": "Hello World"}
 
 
 @app.post("/api/job", response_model=Job)
 async def create_job(job: JobCreate):
-    print("Hello!")
     print(job)
-    return True
     try:
         # Insert job into Supabase
         print("Inserting new job into table")
