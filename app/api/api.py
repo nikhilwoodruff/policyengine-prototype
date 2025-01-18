@@ -38,6 +38,8 @@ else:
     supabase_url = os.getenv("SUPABASE_LOCAL_URL")
     supabase_key = os.getenv("SUPABASE_LOCAL_KEY")
 
+print(supabase_url, os.getenv("LOCAL"))
+
 supabase = create_client(supabase_url, supabase_key)
 
 
