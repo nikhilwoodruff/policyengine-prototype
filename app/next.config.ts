@@ -13,6 +13,17 @@ const nextConfig: NextConfig = {
     SUPABASE_KEY: process.env.LOCAL ?
       process.env.SUPABASE_KEY :
       process.env.SUPABASE_LOCAL_KEY,
+  },
+  rewrites: async () => {
+    return [
+      {
+        source: "/api/:path*",
+        destination:
+          process.env.NODE_ENV === "development"
+            ? "http://127.0.0.1:8000/api/:path*"
+            : "/api/",
+      },
+    ];
   }
 };
 
