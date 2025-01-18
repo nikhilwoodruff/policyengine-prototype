@@ -65,6 +65,7 @@ async def main():
 async def create_job(job: JobCreate):
     print("Hello!")
     print(job)
+    return True
     try:
         # Insert job into Supabase
         print("Inserting new job into table")
