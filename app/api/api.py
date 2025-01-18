@@ -63,6 +63,7 @@ async def main():
 
 @app.post("/api/job", response_model=Job)
 async def create_job(job: JobCreate):
+    print("Hello!")
     print(job)
     try:
         # Insert job into Supabase
