@@ -55,5 +55,3 @@ jobs:
             -H "Content-Type: application/json" \
             -d '{"job": 1}' \
             --fail
-
-            
