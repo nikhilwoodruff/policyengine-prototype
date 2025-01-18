@@ -38,8 +38,6 @@ else:
     supabase_url = os.getenv("SUPABASE_LOCAL_URL")
     supabase_key = os.getenv("SUPABASE_LOCAL_KEY")
 
-print(supabase_url, os.getenv("LOCAL"))
-
 supabase = create_client(supabase_url, supabase_key)
 
 
@@ -101,7 +99,6 @@ async def create_job(job: JobCreate):
                 requests.post(
                     cloud_function_url,
                     json={"job_id": created_job["id"]},
-                    timeout=0.1,  # 0.1 second timeout
                 )
         except requests.exceptions.RequestException as e:
             # Log the error but don't fail the job creation
