@@ -27,12 +27,6 @@ async function submitJob(jobDetails: string) {
   )
 }
 
-async function getJobResult(jobId: string) {
-  return supabase.from("job").select("result").eq("id", jobId).then(
-    data => data.data
-  );
-}
-
 export default function Home() {
   const [jobDetails, setJobDetails] = useState<string>(`{"scope": "household", "country": "uk", "data": {"employment_income": 30000}, "path": "/", "time_period": 2025}`);
   const [jobId, setJobId] = useState<string>("");
@@ -46,11 +40,10 @@ export default function Home() {
         <Textarea className="w-full h-1/2" placeholder="Enter job details here" value={jobDetails} onChange={(e) => setJobDetails(e.target.value)} />
         <Button className="w-full" onClick={() => submitJob(jobDetails).then(value => {
             setJobId(value);
-            getJobResult(value).then(setJobData);
             supabase.channel(`job_${value}`).on(
               "postgres_changes", 
               { schema: "public", table: "job", event: "*", filter: "id=eq." + value },
-              () => {getJobResult(value).then(setJobData)}
+              (data) => {setJobData(data.new);}
             ).subscribe();
 
           })}>Start job</Button>
@@ -58,8 +51,7 @@ export default function Home() {
       <Card className="h-3/4 w-3/4 p-4 m-4">
         <h1 className="text-2xl font-bold">Job results</h1>
         <p className="text-gray-600">Results will appear here.</p>
-        <h4>Job {jobId}</h4>
-        <p>{JSON.stringify(jobData)}</p>
+        <p>{jobData ? JSON.stringify(jobData) : null}</p>
       </Card>
     </div>
   );
