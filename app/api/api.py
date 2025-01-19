@@ -96,10 +96,16 @@ async def create_job(job: JobCreate):
                 print("Running compute locally for", created_job["id"])
                 run_compute(created_job["id"])
             else:
-                requests.post(
-                    cloud_function_url,
-                    json={"job_id": created_job["id"]},
-                )
+                try:
+                    requests.post(
+                        cloud_function_url,
+                        json={"job_id": created_job["id"]},
+                        timeout=0.1,
+                    )
+                    # Accept timeouts
+                except requests.exceptions.Timeout:
+                    pass
+
         except requests.exceptions.RequestException as e:
             # Log the error but don't fail the job creation
             print(f"Failed to trigger cloud function: {str(e)}")
