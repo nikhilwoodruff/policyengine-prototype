@@ -29,7 +29,6 @@ async function submitJob(jobDetails: string) {
 
 export default function Home() {
   const [jobDetails, setJobDetails] = useState<string>(`{"scope": "household", "country": "uk", "data": {"employment_income": 30000}, "path": "/", "time_period": 2025}`);
-  const [jobId, setJobId] = useState<string>("");
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const [jobData, setJobData] = useState<any>(null);
   return (
@@ -39,7 +38,6 @@ export default function Home() {
         <p className="text-gray-600">Create a simulation job here.</p>
         <Textarea className="w-full h-1/2" placeholder="Enter job details here" value={jobDetails} onChange={(e) => setJobDetails(e.target.value)} />
         <Button className="w-full" onClick={() => submitJob(jobDetails).then(value => {
-            setJobId(value);
             supabase.channel(`job_${value}`).on(
               "postgres_changes", 
               { schema: "public", table: "job", event: "*", filter: "id=eq." + value },
