@@ -31,25 +31,37 @@ export default function Home() {
   const [jobDetails, setJobDetails] = useState<string>(`{"scope": "household", "country": "uk", "data": {"employment_income": 30000}, "path": "/", "time_period": 2025}`);
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const [jobData, setJobData] = useState<any>(null);
+  const [jobSubmitted, setJobSubmitted] = useState<boolean>(false);
   return (
     <div className="h-screen flex justify-center items-center">
       <Card className="h-3/4 w-1/4 p-4 m-4">
         <h1 className="text-2xl font-bold">Start job</h1>
         <p className="text-gray-600">Create a simulation job here.</p>
         <Textarea className="w-full h-1/2" placeholder="Enter job details here" value={jobDetails} onChange={(e) => setJobDetails(e.target.value)} />
-        <Button className="w-full" onClick={() => submitJob(jobDetails).then(value => {
+        <Button className="w-full" onClick={() => {
+          setJobSubmitted(true);
+          setJobData(null);
+          submitJob(jobDetails).then(value => {
             supabase.channel(`job_${value}`).on(
               "postgres_changes", 
               { schema: "public", table: "job", event: "*", filter: "id=eq." + value },
               (data) => {setJobData(data.new);}
             ).subscribe();
 
-          })}>Start job</Button>
+          })
+        }}>Start job</Button>
       </Card>
       <Card className="h-3/4 w-3/4 p-4 m-4">
         <h1 className="text-2xl font-bold">Job results</h1>
         <p className="text-gray-600">Results will appear here.</p>
-        <p>{jobData ? JSON.stringify(jobData) : null}</p>
+        <p>
+          {jobSubmitted ?
+            jobData ?
+              jobData.status :
+              "Job submitted" :
+            "No job submitted"
+          }
+        </p>
       </Card>
     </div>
   );
