@@ -62,6 +62,12 @@ export default function Home() {
             "No job submitted"
           }
         </p>
+        <p>
+          {jobData ?
+            JSON.stringify(jobData) :
+            ""
+          }
+        </p>
       </Card>
     </div>
   );
